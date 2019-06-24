@@ -1,0 +1,8 @@
+## not tracking files as follow.
+*.o
+*.txt
+*.a
+*.lib
+*.log
+*.so
+*.exe

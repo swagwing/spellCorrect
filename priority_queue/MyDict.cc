@@ -30,13 +30,20 @@ map<string,set<int>>& MyDict::getIndexTable(const char* indexPath)
 {
     ifstream ifs(indexPath);
     string alpha;
-    set<int> current;
-    while(ifs >> alpha){
-        int pos;
-        while(ifs >> pos){
-            current.insert(pos);
+    string line;
+    int pos;
+    int cnt = 1;
+    while(getline(ifs,line))
+    {
+        stringstream ss(line);
+        if(cnt%2 != 0)
+            ss >> alpha;
+        else{
+            while(ss >> pos){
+                _index_table[alpha].insert(pos);
+            }
         }
-        _index_table.insert({alpha,current});
+        ++cnt;
     }
     return _index_table;
 }

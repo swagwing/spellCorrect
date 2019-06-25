@@ -5,6 +5,7 @@
 #include <set>
 #include <map>
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 namespace wd

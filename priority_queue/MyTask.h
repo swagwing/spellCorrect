@@ -23,7 +23,7 @@ struct MyCompare
             return a._word < b._word;
         if(a._iDict == b._iDict)
             return a._iFreq > b._iFreq;
-        return a._iDict < b._iDict;
+        return a._iDict > b._iDict;
     }
 };
 
@@ -34,6 +34,7 @@ public:
     void queryIndexTable();
     void statistic(set<int>&);
     int distance(const string&);
+    void print();
 private:
     string _queryWord; //等查询的单词
     priority_queue<MyResult,vector<MyResult>,MyCompare> _resultQue; //保存候选词的优先级队列

@@ -3,6 +3,7 @@
 #include <queue>
 #include <iostream>
 #include <set>
+#include <json/json.h>
 #define INF 0x3f3f3f3f
 using namespace std;
 
@@ -34,7 +35,8 @@ public:
     void queryIndexTable();
     void statistic(set<int>&);
     int distance(const string&);
-    void print();
+    void response();
+    //void print();
 private:
     string _queryWord; //等查询的单词
     priority_queue<MyResult,vector<MyResult>,MyCompare> _resultQue; //保存候选词的优先级队列

@@ -3,8 +3,8 @@
 
 int main()
 {
-    wd::MyTask task("hello");
+    wd::MyTask task("word");
     task.queryIndexTable();
-    task.print();
+    task.response();
     return 0;
 }

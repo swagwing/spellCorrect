@@ -101,14 +101,28 @@ int MyTask::distance(const string& rhs)
     return dp[len1][len2];
 }
 
-void MyTask::print()
+//void MyTask::print()
+//{
+//    MyResult result;
+//    for(int cnt=1;cnt <= 6; ++cnt){
+//        result = _resultQue.top();
+//        cout << result._iDict << " " << result._iFreq << " " << result._word << endl;
+//        _resultQue.pop();
+//    }
+//}
+
+void MyTask::response()
 {
     MyResult result;
-    for(int cnt=1;cnt <= 6; ++cnt){
+    Json::Value root;
+    for(int cnt=1; cnt <= 3; ++cnt){
         result = _resultQue.top();
-        cout << result._iDict << " " << result._iFreq << " " << result._word << endl;
+        root["word_candidate"].append(result._word);
         _resultQue.pop();
     }
+    Json::FastWriter fast_writer;
+    cout << "word_candidate: " << endl;
+    cout << fast_writer.write(root) << endl;
 }
 
 }//end of namespace wd

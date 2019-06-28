@@ -15,9 +15,9 @@ class MyDict
 {
 public:
     static MyDict* createInstance(); //静态函数
-    void init(const char*); //通过英文路径初始化词典
+    void init(const string,const string); //通过英文路径初始化词典
     vector<pair<string,int>>& getDict(); //获取词典
-    map<string,set<int>>& getIndexTable(const char*); //获取索引表
+    map<string,set<int>>& getIndexTable(); //获取索引表
 
 private:
     MyDict() {}

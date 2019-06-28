@@ -1,0 +1,4 @@
+ip 192.168.233.129
+port 2000
+dictPath ./dict
+indexPath ./index

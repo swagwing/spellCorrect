@@ -11,29 +11,20 @@ MyDict* MyDict::createInstance()
     return _pInstance;
 };
 
-void MyDict::init(const char* dictEnPath)
+void MyDict::init(const string dictEnPath,const string indexEnPath)
 {
-    ifstream ifs(dictEnPath);
+    ifstream ifs_dictEn(dictEnPath);
     string word;
     int frequency;
-    while(ifs >> word >> frequency){
+    while(ifs_dictEn >> word >> frequency){
         _dict.push_back(make_pair(word,frequency));
     }
-}
-
-vector<pair<string,int>>& MyDict::getDict()
-{
-    return _dict;
-}
-
-map<string,set<int>>& MyDict::getIndexTable(const char* indexPath)
-{
-    ifstream ifs(indexPath);
+    ifstream ifs_indexEn(indexEnPath);
     string alpha;
     string line;
     int pos;
     int cnt = 1;
-    while(getline(ifs,line))
+    while(getline(ifs_indexEn,line))
     {
         stringstream ss(line);
         if(cnt%2 != 0)
@@ -45,6 +36,16 @@ map<string,set<int>>& MyDict::getIndexTable(const char* indexPath)
         }
         ++cnt;
     }
+
+}
+
+vector<pair<string,int>>& MyDict::getDict()
+{
+    return _dict;
+}
+
+map<string,set<int>>& MyDict::getIndexTable()
+{
     return _index_table;
 }
 

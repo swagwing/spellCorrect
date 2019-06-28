@@ -26,8 +26,10 @@ string wordFilter(string word)
     return word;
 }
 
-MyTask::MyTask(const string& queryWord)
-    :_queryWord(queryWord)
+MyTask::MyTask(const string& queryWord,const TcpConnectionPtr& conn,MyDict* pInstance)
+    :_conn(conn)
+    ,_queryWord(queryWord)
+    ,_pInstance(pInstance)
 {}
 
 void MyTask::queryIndexTable()
@@ -41,8 +43,7 @@ void MyTask::queryIndexTable()
     map<string,set<int>> index;
     set<int> iset;
     set<int> tset;
-    wd::MyDict* pInstance = wd::MyDict::createInstance();
-    index = pInstance->getIndexTable("index");
+    index = _pInstance->getIndexTable();
     for(int i = 0; i < len; ++i){
         char alpha = tmp[i];
         string str(1,alpha);
@@ -50,6 +51,7 @@ void MyTask::queryIndexTable()
         tset.insert(iset.begin(),iset.end());
     }
     statistic(tset);
+    response();
 }
 
 void MyTask::statistic(set<int>& iset)
@@ -58,9 +60,7 @@ void MyTask::statistic(set<int>& iset)
     int CurDistance;
     vector<pair<string,int>> dict;
     MyResult result;
-    wd::MyDict* pInstance = wd::MyDict::createInstance();
-    pInstance->init("dict");
-    dict = pInstance->getDict();
+    dict = _pInstance->getDict();
     auto it = iset.begin();
     while(it != iset.end()){
         candidateWord = dict[*it].first;

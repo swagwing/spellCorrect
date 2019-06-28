@@ -122,7 +122,9 @@ void MyTask::response()
     }
     Json::FastWriter fast_writer;
     cout << "word_candidate: " << endl;
-    cout << fast_writer.write(root) << endl;
+    string response = fast_writer.write(root);
+    cout << "response:" << response << endl;
+    _conn->sendInLoop(response);
 }
 
 }//end of namespace wd

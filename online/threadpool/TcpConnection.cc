@@ -36,14 +36,16 @@ TcpConnection::~TcpConnection()
 
 string TcpConnection::receive()
 {
-	char buff[65536] = {0};
-	_socketIo.readline(buff, sizeof(buff));
+	char buff[1000] = {0};
+    int data_len;
+    _socketIo.recv_cyle((char*)&data_len,4);
+    _socketIo.recv_cyle(buff,data_len);
 	return string(buff);
 }
 	
 void TcpConnection::send(const string & msg)
 {
-	_socketIo.writen(msg.c_str(), msg.size());
+	_socketIo.send_cycle(msg.c_str(), msg.size());
 }
 
 void TcpConnection::sendInLoop(const string & msg)

@@ -8,12 +8,13 @@
 #include "TcpConnection.h"
 #include "InetAddress.h"
 #include "EventLoop.h"
-
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/socket.h>
-
+#include <iostream>
 #include <sstream>
+#include <string.h>
+using namespace std;
 
 namespace wd
 {
@@ -45,7 +46,10 @@ string TcpConnection::receive()
 	
 void TcpConnection::send(const string & msg)
 {
-	_socketIo.send_cycle(msg.c_str(), msg.size());
+    train t;
+    strcpy(t.buf,msg.c_str());
+    t.dataLen = msg.size();
+	_socketIo.send_cycle((char*)&t,4+t.dataLen);
 }
 
 void TcpConnection::sendInLoop(const string & msg)

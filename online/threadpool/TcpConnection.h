@@ -21,7 +21,6 @@ using std::function;
 namespace wd
 {
 
-
 class TcpConnection;
 using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
 using TcpConnectionCallback = function<void(const TcpConnectionPtr&)>;

@@ -16,6 +16,7 @@
     }while(0)
 #define ERROR_CHECK(ret,retval,funcName) {if(ret == retval)\
     {perror(funcName); return -1;}}
+
 struct train
 {
     int dataLen;
@@ -49,7 +50,7 @@ int recv_n(int sfd,char* buf,int len)
         ret = recv(sfd,buf+total,len-total,0);
         total = total + ret;
     }
-    return 0;
+    return total;
 }
 
 int do_service(int sockfd);
@@ -71,9 +72,12 @@ int main(int argc, const char *argv[])
 
     char buf[1000];
     memset(buf, 0, sizeof(buf));
-    read(peerfd, buf, sizeof(buf));
-    printf("%s\n", buf);
-
+    //read(peerfd, buf, sizeof(buf));
+    //printf("%s\n", buf);
+    int length_buf;
+    recv_n(peerfd,(char*)&length_buf,4);
+    recv_n(peerfd,buf,length_buf);
+    cout << "buf:" << buf << endl;
     do_service(peerfd);
     return 0;
 }
@@ -91,22 +95,23 @@ int do_service(int sockfd)
         cin >> sendbuf;
         t.dataLen = strlen(sendbuf);
         strcpy(t.buf,sendbuf);
-        cout << "t.dataLen: " << t.dataLen << endl;
-        cout << "t.buff: " << t.buf << endl;
         ret = send_n(sockfd,(char*)&t,4+t.dataLen);
         ERROR_CHECK(ret,-1,"send_n");
-        //sleep(5);
-        //read
         ret = recv_n(sockfd,(char*)&data_len,4);
         if(-1 == ret){
             cout << "server is not online" << endl;
             break;
         }
         ret = recv_n(sockfd,recvbuf,data_len);
-        cout << "receive: " << recvbuf << endl;
+        Json::Reader reader;
+        Json::Value json_object;
+        if(!reader.parse(recvbuf,json_object))
+            return 0;
+        cout << json_object["word_candidate"] << endl;
         memset(recvbuf, 0, sizeof recvbuf);
         memset(sendbuf, 0, sizeof sendbuf);
     }
+    return 0;
 }
 
 

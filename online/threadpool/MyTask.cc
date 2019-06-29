@@ -35,11 +35,8 @@ MyTask::MyTask(const string& queryWord,const TcpConnectionPtr& conn,MyDict* pIns
 void MyTask::queryIndexTable()
 {
     string tmp;
-    cout << "before filter: " << _queryWord << endl; //**测试信息
     tmp = wordFilter(_queryWord);
-    cout << "after filter: " << tmp << endl;  //**测试信息
     int len = tmp.length();
-    cout << "the length of tmp: " << len << endl; //**测试信息
     map<string,set<int>> index;
     set<int> iset;
     set<int> tset;
@@ -121,9 +118,7 @@ void MyTask::response()
         _resultQue.pop();
     }
     Json::FastWriter fast_writer;
-    cout << "word_candidate: " << endl;
     string response = fast_writer.write(root);
-    cout << "response:" << response << endl;
     _conn->sendInLoop(response);
 }
 

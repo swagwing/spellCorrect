@@ -1,24 +1,19 @@
- ///
- /// @file    Thread.cc
- /// @author  lemon(haohb13@gmail.com)
- /// @date    2019-05-04 09:51:40
- ///
- 
-
 #include "Thread.h"
 #include <iostream>
-using std::cout;
-using std::endl;
+using namespace std;
 
 namespace wd
 {
+__thread int threadNum = 0;
 
-Thread::Thread(ThreadCallback && cb)
+Thread::Thread(ThreadCallback && cb,int num)
 : _pthid(0)
 , _cb(std::move(cb))
 , _isRunning(false)
+,_threadNumber(num)
 {
-	cout << "Thread()" << endl;
+    threadNum = _threadNumber;
+	cout << "thread " << threadNum << ": Thread()" << endl;
 }
 
 void Thread::start()
@@ -47,7 +42,7 @@ Thread::~Thread()
 	if(_isRunning) {
 		pthread_detach(_pthid);	
 	}
-	cout << "~Thread()" << endl;
+	cout << "thread " << threadNum << ": ~Thread()" << endl;
 }
 
 }//end of namespace wd

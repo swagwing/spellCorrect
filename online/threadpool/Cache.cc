@@ -30,16 +30,31 @@ void Cache::writeToFile(const string& fileName)
     }
 }
 
-void Cache::update(const Cache& rhs)
+//void Cache::update(const Cache& rhs)
+//{
+//    string str1,str2;
+//    auto it = _updateData.begin();
+//    while(it !=_updateData.end()){
+//        str1 = it->first;
+//        str2 = it->second;
+//        _hashMap.insert(make_pair(str1,str2));
+//        ++it;
+//    }
+//}
+
+string Cache::search(const string& word)
 {
-    string str1,str2;
-    auto it = _updateData.begin();
-    while(it !=_updateData.end()){
-        str1 = it->first;
-        str2 = it->second;
-        _hashMap.insert(make_pair(str1,str2));
-        ++it;
+    auto it = _hashMap.find(word);
+    if(it != _hashMap.end()){
+        return it->second;
     }
+    else
+        return string();
+}
+
+list<pair<string,string>> Cache::getHotData()
+{
+    return _updateData;
 }
 
 }//end of namespace wd

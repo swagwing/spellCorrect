@@ -2,6 +2,9 @@
 #define __WD_MYTASK_H_
 #include "MyDict.h"
 #include "TcpServer.h"
+#include "CacheManager.h"
+#include "Cache.h"
+#include "Thread.h"
 #include <queue>
 #include <iostream>
 #include <set>
@@ -33,16 +36,17 @@ struct MyCompare
 class MyTask
 {
 public:
-    MyTask(const string&,const wd::TcpConnectionPtr&,MyDict*);
+    MyTask(const string&,const wd::TcpConnectionPtr&,MyDict*,CacheManager*);
+    void execute(); //执行cache查询
     void queryIndexTable();
     void statistic(set<int>&);
     int distance(const string&);
     void response();
-    //void print();
 private:
     TcpConnectionPtr _conn;
     string _queryWord; //等查询的单词
     MyDict* _pInstance;
+    CacheManager* _pCacheM;
     priority_queue<MyResult,vector<MyResult>,MyCompare> _resultQue; //保存候选词的优先级队列
 };
 }//end of namespace wd

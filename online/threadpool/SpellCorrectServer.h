@@ -5,6 +5,10 @@
 #include "MyConf.h"
 #include "MyDict.h"
 #include "MyTask.h"
+#include "Timer.h"
+#include "CacheManager.h"
+#include <iostream>
+#include <functional>
 using namespace std;
 
 namespace wd
@@ -22,6 +26,9 @@ private:
     MyConf _conf;
     TcpServer _tcpserver;
     Threadpool _threadpool;
+    CacheManager* _pCacheM;
+    Timer _timer;
+
 };
 
 }//end of namespace wd

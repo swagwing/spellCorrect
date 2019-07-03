@@ -1,17 +1,8 @@
- ///
- /// @file    Threadpool.cc
- /// @author  lemon(haohb13@gmail.com)
- /// @date    2019-05-06 11:32:31
- ///
- 
 #include "Threadpool.h"
 #include "Thread.h"
-
 #include <unistd.h>
-
 #include <iostream>
-using std::cout;
-using std::endl;
+using namespace std;
 
 namespace wd 
 {
@@ -28,10 +19,10 @@ Threadpool::Threadpool(size_t threadNum, size_t queSize)
 
 void Threadpool::start()
 {
-	for(size_t idx = 0; idx != _threadNum; ++idx) {
+	for(size_t idx = 1; idx != _threadNum+1; ++idx) {
 		unique_ptr<Thread> thread(new Thread(
 			std::bind(&Threadpool::threadFunc, this)
-		));
+            ,idx));
 		_threads.push_back(std::move(thread));
 	}
 

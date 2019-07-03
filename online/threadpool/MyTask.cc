@@ -26,11 +26,37 @@ string wordFilter(string word)
     return word;
 }
 
-MyTask::MyTask(const string& queryWord,const TcpConnectionPtr& conn,MyDict* pInstance)
+MyTask::MyTask(const string& queryWord,const TcpConnectionPtr& conn,MyDict* pInstance,CacheManager* pCacheM)
     :_conn(conn)
     ,_queryWord(queryWord)
     ,_pInstance(pInstance)
+     ,_pCacheM(pCacheM)
 {}
+
+void MyTask::execute()
+{
+    Cache iCache = _pCacheM->getCache(threadNum);
+    string response;
+    if(iCache.search(_queryWord) != string()){
+        response = iCache.search(_queryWord);
+        cout << " in cache->reaponse: " << response << endl; //***测试信息
+    }else{
+        queryIndexTable();
+        MyResult result;
+        Json::Value root;
+        for(int cnt=1; cnt <= 3; ++cnt){
+            result = _resultQue.top();
+            root["word_candidate"].append(result._word);
+            _resultQue.pop();
+        }
+        Json::FastWriter fast_writer;
+        response = fast_writer.write(root);
+        cout << "not in Cache-> response: " << response << endl;
+        list<pair<string,string>> ilist;
+        ilist = iCache.getHotData();
+        ilist.push_back(make_pair(_queryWord,response));
+    }
+}
 
 void MyTask::queryIndexTable()
 {
@@ -48,7 +74,7 @@ void MyTask::queryIndexTable()
         tset.insert(iset.begin(),iset.end());
     }
     statistic(tset);
-    response();
+    //response();
 }
 
 void MyTask::statistic(set<int>& iset)
@@ -98,16 +124,6 @@ int MyTask::distance(const string& rhs)
     return dp[len1][len2];
 }
 
-//void MyTask::print()
-//{
-//    MyResult result;
-//    for(int cnt=1;cnt <= 6; ++cnt){
-//        result = _resultQue.top();
-//        cout << result._iDict << " " << result._iFreq << " " << result._word << endl;
-//        _resultQue.pop();
-//    }
-//}
-
 void MyTask::response()
 {
     MyResult result;
@@ -119,7 +135,8 @@ void MyTask::response()
     }
     Json::FastWriter fast_writer;
     string response = fast_writer.write(root);
-    _conn->sendInLoop(response);
+    cout << "not in Cache-> response: " << response << endl;
+    //_conn->sendInLoop(response); //暂时注释掉
 }
 
 }//end of namespace wd

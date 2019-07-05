@@ -1,18 +1,9 @@
- ///
- /// @file    Timer.cc
- /// @author  lemon(haohb13@gmail.com)
- /// @date    2019-06-14 10:16:54
- ///
- 
 #include "Timer.h"
-
 #include <unistd.h>
 #include <poll.h>
 #include <sys/timerfd.h>
-
 #include <iostream>
 using namespace std;
-             
  
 namespace wd
 {

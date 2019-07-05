@@ -1,9 +1,9 @@
 #ifndef __WD_CACHEMANAGER_H__
 #define __WD_CACHEMANAGER_H__
 #include "Cache.h"
-#include "TimerThread.h"
 #include "MyConf.h"
 #include <vector>
+#include <unordered_map>
 #include <iostream>
 using namespace std;
 
@@ -14,14 +14,18 @@ class CacheManager
 {
 public:
     static CacheManager* createInstance();
-    static CacheManager* initCache(size_t,const string&); //从磁盘文件中读取缓存信息
-    static Cache& getCache(size_t); //获取某个缓存
+    CacheManager* initCache(size_t); //从磁盘文件中读取缓存信息
+    void readFromFile(const string&);
+    void writeToFile(const string&);
+    Cache& getCache(size_t); //获取某个缓存
     void periodicUpdateCaches(); //定时更新所有的缓存
+    string searchMainCache(string& word);
 private:
-    CacheManager() {}
+    CacheManager();
 private:
     static CacheManager* _pCacheManager;
-    static vector<Cache> _cacheList; 
+    vector<Cache> _cacheList;
+    unordered_map<string,string> _hashMap; 
 };
 }//end of namespace wd
 

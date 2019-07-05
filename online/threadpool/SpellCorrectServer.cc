@@ -6,7 +6,7 @@ SpellCorrectServer::SpellCorrectServer(const string& cfgFileName)
     :_conf(cfgFileName)
     ,_tcpserver(_conf.getConfigMap().find("ip")->second,stoi(_conf.getConfigMap().find("port")->second))
     ,_threadpool(4,10)
-    ,_pCacheM(CacheManager::createInstance()->initCache(10,_conf.getConfigMap().find("cachePath")->second))
+    ,_pCacheM(CacheManager::createInstance()->initCache(10))
     ,_timer(10,10,bind(&CacheManager::periodicUpdateCaches,_pCacheM))
 {}
 
@@ -24,7 +24,7 @@ void SpellCorrectServer::onMessage(const TcpConnectionPtr& conn)
     MyDict* pInstance = MyDict::createInstance();
     pInstance->init(_conf.getConfigMap().find("dictPath")->second,_conf.getConfigMap().find("indexPath")->second);
     MyTask task(msg,conn,pInstance,_pCacheM);
-    _threadpool.addTask(std::bind(&MyTask::response,task));
+    _threadpool.addTask(std::bind(&MyTask::execute,task));
 }
 
 void SpellCorrectServer::onClose(const TcpConnectionPtr& conn)

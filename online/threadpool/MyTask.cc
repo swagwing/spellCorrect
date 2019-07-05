@@ -39,22 +39,27 @@ void MyTask::execute()
     string response;
     if(iCache.search(_queryWord) != string()){
         response = iCache.search(_queryWord);
-        cout << " in cache->reaponse: " << response << endl; //***测试信息
+        cout << "in cache->reaponse: " << response << endl; //***测试信息
     }else{
-        queryIndexTable();
-        MyResult result;
-        Json::Value root;
-        for(int cnt=1; cnt <= 3; ++cnt){
-            result = _resultQue.top();
-            root["word_candidate"].append(result._word);
-            _resultQue.pop();
+        if(_pCacheM->searchMainCache((_queryWord)) != string()){
+            response = _pCacheM ->searchMainCache(_queryWord);
+            cout << "in cache->response: " << response << endl; //***测试信息
+        }else{
+            queryIndexTable();
+            MyResult result;
+            Json::Value root;
+            for(int cnt=1; cnt <= 3; ++cnt){
+                result = _resultQue.top();
+                root["word_candidate"].append(result._word);
+                _resultQue.pop();
+            }
+            Json::FastWriter fast_writer;
+            response = fast_writer.write(root);
+            cout << "not in Cache-> response: " << response << endl;
+            list<pair<string,string>> ilist;
+            ilist = iCache.getHotData();
+            ilist.push_back(make_pair(_queryWord,response));
         }
-        Json::FastWriter fast_writer;
-        response = fast_writer.write(root);
-        cout << "not in Cache-> response: " << response << endl;
-        list<pair<string,string>> ilist;
-        ilist = iCache.getHotData();
-        ilist.push_back(make_pair(_queryWord,response));
     }
 }
 

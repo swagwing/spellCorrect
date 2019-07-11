@@ -21,6 +21,7 @@ namespace wd
 EventLoop::EventLoop(Acceptor & acceptor)
 : _efd(createEpollFd())
 , _eventfd(createEventFd())
+, _timerfd(Timer::getFd())
 , _acceptor(acceptor)
 , _eventList(1024)
 , _isLooping(false)

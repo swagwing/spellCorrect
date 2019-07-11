@@ -29,7 +29,7 @@ public:
 	void start();
 	void stop();
 	void setTimer(int initTime, int intervalTime);
-
+    int getFd();
 private:
 	int createTimerfd();
 	void handleRead();

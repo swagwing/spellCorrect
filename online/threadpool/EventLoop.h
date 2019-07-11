@@ -8,9 +8,8 @@
 #define __WD_EVENTLOOP_H__
 
 #include "MutexLock.h"
-
+#include "Timer.h"
 #include <sys/epoll.h>
-
 #include <map>
 #include <memory>
 #include <vector>
@@ -59,6 +58,7 @@ private:
 private:
 	int _efd;
 	int _eventfd;
+    int _timerfd;
 	Acceptor & _acceptor;
 	vector<struct epoll_event> _eventList;
 	map<int, TcpConnectionPtr> _conns;

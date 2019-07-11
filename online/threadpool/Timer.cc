@@ -56,6 +56,11 @@ int Timer::createTimerfd()
 	return fd;
 }
 
+int Timer::getFd()
+{
+    return _fd;
+}
+
 void Timer::setTimer(int initalTime, int intervalTime)
 {
 	struct itimerspec value;

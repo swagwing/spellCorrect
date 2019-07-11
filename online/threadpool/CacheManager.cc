@@ -23,13 +23,13 @@ CacheManager* CacheManager::initCache(size_t capacity)
         _cacheList.push_back(cache);
     }
     MyConf conf("../conf/config"); //￥￥￥硬编码，待修改
-    CacheManager::readFromFile(conf.getConfigMap().find("cache")->second);
+    CacheManager::readFromFile(conf.getConfigMap().find("cachePath")->second);
     return _pCacheManager;
 }
 
 Cache& CacheManager::getCache(size_t num)
 {
-    return _cacheList[num-1];
+    return _cacheList[num];
 }
 
 void CacheManager::periodicUpdateCaches()
@@ -48,15 +48,22 @@ void CacheManager::periodicUpdateCaches()
         }
     }
     MyConf conf("../conf/config"); //$$$硬编码，待修改
-    CacheManager::writeToFile(conf.getConfigMap().find("cache")->second);
+    CacheManager::writeToFile(conf.getConfigMap().find("cachePath")->second);
 }
 
 void CacheManager::readFromFile(const string& fileName)
 {
+    cout << "enter CacheManager::readFromFile" << endl;
     ifstream ifs(fileName);
     string str1,str2;
     while(ifs >> str1 >> str2){
         _hashMap.insert(make_pair(str1,str2));
+    }
+    cout << "CacheManager::readFromFile-->_hashMap" << endl; //***以下皆为测试信息
+    auto it = _hashMap.begin();
+    while(it != _hashMap.end()){
+        cout << it->first << " " << it->second << endl;
+        ++it;
     }
 }
 
@@ -64,7 +71,7 @@ void CacheManager::writeToFile(const string& fileName)
 {
     ofstream ofs(fileName);
     auto it = _hashMap.begin();
-    while(it != _hashMap.end()){
+   while(it != _hashMap.end()){
         ofs << it->first << " " << it->second << endl;
         ++it;
     }

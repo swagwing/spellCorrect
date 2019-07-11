@@ -38,7 +38,7 @@ int send_n(int sfd,char* buf,int len)
         }
         total = total + ret;
     }
-    return 0;
+    return total;
 }
 
 int recv_n(int sfd,char* buf,int len)
@@ -51,6 +51,19 @@ int recv_n(int sfd,char* buf,int len)
         total = total + ret;
     }
     return total;
+}
+
+int recvTrain(int sfd,char* buf)
+{
+    int ret,data_len;
+    train t;
+    memset(&t,0,sizeof(train));
+    recv_n(sfd,(char*)&t.dataLen,4);
+    data_len = t.dataLen;
+    ret = recv_n(sfd,(char*)&t.buf,data_len);
+    strcpy(buf,t.buf);
+    return ret;
+    
 }
 
 int do_service(int sockfd);
@@ -72,8 +85,6 @@ int main(int argc, const char *argv[])
 
     char buf[1000];
     memset(buf, 0, sizeof(buf));
-    //read(peerfd, buf, sizeof(buf));
-    //printf("%s\n", buf);
     int length_buf;
     recv_n(peerfd,(char*)&length_buf,4);
     recv_n(peerfd,buf,length_buf);
@@ -91,18 +102,25 @@ int do_service(int sockfd)
     while(1)
     {
         int ret;
-        int data_len;
         cin >> sendbuf;
         t.dataLen = strlen(sendbuf);
         strcpy(t.buf,sendbuf);
         ret = send_n(sockfd,(char*)&t,4+t.dataLen);
         ERROR_CHECK(ret,-1,"send_n");
-        ret = recv_n(sockfd,(char*)&data_len,4);
-        if(-1 == ret){
-            cout << "server is not online" << endl;
-            break;
+        cout << "t.buf" << t.buf << " ret: "<<ret<<endl;
+        ret = recvTrain(sockfd,recvbuf);
+        if(-1 == ret)
+        {
+            if(errno == EINTR)
+                continue;
+            ERR_EXIT("recv");
         }
-        ret = recv_n(sockfd,recvbuf,data_len);
+        else if(0 == ret)
+        {
+            cout << "server close" << endl;
+            close(sockfd);
+            exit(EXIT_SUCCESS);
+        }
         Json::Reader reader;
         Json::Value json_object;
         if(!reader.parse(recvbuf,json_object))

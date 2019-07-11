@@ -35,15 +35,17 @@ MyTask::MyTask(const string& queryWord,const TcpConnectionPtr& conn,MyDict* pIns
 
 void MyTask::execute()
 {
-    Cache iCache = _pCacheM->getCache(threadNum);
+    cout << "enter MyTask::execute" << endl;
+    cout << "MyTask::execute-->threadNum: " << threadNum << endl; //***threadNum获取正确
+    Cache iCache = _pCacheM->getCache(threadNum); //***第一次问题所在
     string response;
     if(iCache.search(_queryWord) != string()){
         response = iCache.search(_queryWord);
-        cout << "in cache->reaponse: " << response << endl; //***测试信息
+        cout << "in cache(iHotData)->reaponse: " << response << endl; //***测试信息
     }else{
         if(_pCacheM->searchMainCache((_queryWord)) != string()){
             response = _pCacheM ->searchMainCache(_queryWord);
-            cout << "in cache->response: " << response << endl; //***测试信息
+            cout << "in cache(cacheM)->response: " << response << endl; //***测试信息
         }else{
             queryIndexTable();
             MyResult result;
@@ -59,8 +61,15 @@ void MyTask::execute()
             list<pair<string,string>> ilist;
             ilist = iCache.getHotData();
             ilist.push_back(make_pair(_queryWord,response));
+            cout << "MyTask::execute else else-->ilist" << endl; //***测试信息
+            auto it = ilist.begin();
+            while(it != ilist.end()){
+                cout << it->first << " " << it->second << endl;
+                ++it;
+            }
         }
     }
+    _conn->sendInLoop(response);
 }
 
 void MyTask::queryIndexTable()

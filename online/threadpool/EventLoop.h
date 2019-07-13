@@ -1,9 +1,3 @@
- ///
- /// @file    EventLoop.h
- /// @author  lemon(haohb13@gmail.com)
- /// @date    2019-05-08 10:59:03
- ///
- 
 #ifndef __WD_EVENTLOOP_H__
 #define __WD_EVENTLOOP_H__
 
@@ -22,7 +16,7 @@ namespace wd
 {
 class Acceptor;
 class TcpConnection;
-
+class Timer;
 class EventLoop
 {
 public:
@@ -58,6 +52,7 @@ private:
 private:
 	int _efd;
 	int _eventfd;
+    Timer* _ptimer;
     int _timerfd;
 	Acceptor & _acceptor;
 	vector<struct epoll_event> _eventList;

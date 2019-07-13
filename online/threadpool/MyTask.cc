@@ -1,5 +1,6 @@
 #include "MyTask.h"
 #include "MyDict.h"
+#include "Thread.h"
 
 namespace wd
 {
@@ -58,9 +59,10 @@ void MyTask::execute()
             Json::FastWriter fast_writer;
             response = fast_writer.write(root);
             cout << "not in Cache-> response: " << response << endl;
+            iCache.addElement(_queryWord,response);
             list<pair<string,string>> ilist;
             ilist = iCache.getHotData();
-            ilist.push_back(make_pair(_queryWord,response));
+            //ilist.push_back(make_pair(_queryWord,response));
             cout << "MyTask::execute else else-->ilist" << endl; //***测试信息
             auto it = ilist.begin();
             while(it != ilist.end()){

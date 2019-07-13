@@ -27,7 +27,7 @@ private:
     TcpServer _tcpserver;
     Threadpool _threadpool;
     CacheManager* _pCacheM;
-    Timer _timer;
+    Timer* _timer;
 
 };
 

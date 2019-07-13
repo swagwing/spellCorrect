@@ -10,24 +10,24 @@ namespace wd
 
 extern __thread int threadNum;
 class Thread
-: Noncopyable
+    : Noncopyable
 {
 public:
-	using ThreadCallback = std::function<void()>;
-	Thread(ThreadCallback&&,int);
+    using ThreadCallback = std::function<void()>;
+    Thread(ThreadCallback&&,int);
 
-	void start();
-	void join();
+    void start();
+    void join();
 
-	~Thread();
-
-private:
-	static void * threadFunc(void *);
+    ~Thread();
 
 private:
-	pthread_t _pthid;
-	ThreadCallback _cb;
-	bool _isRunning;
+    static void * threadFunc(void *);
+
+private:
+    pthread_t _pthid;
+    ThreadCallback _cb;
+    bool _isRunning;
     int _threadNumber;
 };
 

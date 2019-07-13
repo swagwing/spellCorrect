@@ -4,7 +4,6 @@
 #include "TcpServer.h"
 #include "CacheManager.h"
 #include "Cache.h"
-#include "Thread.h"
 #include <queue>
 #include <iostream>
 #include <set>

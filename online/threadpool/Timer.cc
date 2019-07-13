@@ -8,7 +8,30 @@ using namespace std;
 namespace wd
 {
 
+Timer* Timer::createTimer()
+{
+    if(_pTimer == nullptr){
+        _pTimer = new Timer();
+        atexit(destroy);
+    }
+    return _pTimer;
+}
 
+void Timer::destroy()
+{
+    if(_pTimer)
+        delete _pTimer;
+}
+
+Timer* Timer::initTime(int initTime,int intervalTime,TimerCallback&& cb)
+{
+    _fd = createTimerfd();
+    _initalTime = initTime;
+    _intervalTime = intervalTime;
+    _cb = move(cb);
+    _isStarted = false;
+    return _pTimer;
+}
 void Timer::start()
 {
 	_isStarted = true;
@@ -83,4 +106,5 @@ void Timer::handleRead()
 		perror(">> read");
 	}
 }
+Timer* Timer::_pTimer = createTimer(); //饱汉模式
 }//end of namespace wd

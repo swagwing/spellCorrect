@@ -21,13 +21,15 @@ namespace wd
 EventLoop::EventLoop(Acceptor & acceptor)
 : _efd(createEpollFd())
 , _eventfd(createEventFd())
-, _timerfd(Timer::getFd())
+, _ptimer(Timer::createTimer())
+, _timerfd(_ptimer->getFd())
 , _acceptor(acceptor)
 , _eventList(1024)
 , _isLooping(false)
 {
 	addEpollFdRead(_acceptor.fd());
 	addEpollFdRead(_eventfd);
+    addEpollFdRead(_timerfd);
 }
 
 void EventLoop::loop()
@@ -85,7 +87,12 @@ void EventLoop::waitEpollFd()
 					doPendingFunctors();//在这里发送数据
 					cout << ">>after doPendingFunctors()" << endl;
 				}
-			} else {
+            }else if(fd == _timerfd){  //处理时间更新cache并回写磁盘事件
+                if(_eventList[idx].events & EPOLLIN){
+                    cout << "update cache." << endl;
+                    _ptimer->Timer::handleRead();
+                }
+            } else {
 				//处理消息
 				if(_eventList[idx].events & EPOLLIN) {
 					handleMessage(fd);

@@ -7,7 +7,7 @@ SpellCorrectServer::SpellCorrectServer(const string& cfgFileName)
     ,_tcpserver(_conf.getConfigMap().find("ip")->second,stoi(_conf.getConfigMap().find("port")->second))
     ,_threadpool(4,10)
     ,_pCacheM(CacheManager::createInstance()->initCache(10))
-    ,_timer(10,10,bind(&CacheManager::periodicUpdateCaches,_pCacheM))
+    ,_timer(Timer::createTimer()->initTime(3,3,bind(&CacheManager::periodicUpdateCaches,_pCacheM)))
 {}
 
 void SpellCorrectServer::onConnection(const TcpConnectionPtr& conn)
@@ -41,6 +41,6 @@ void SpellCorrectServer::start()
     _tcpserver.setMessageCallback(bind(&SpellCorrectServer::onMessage,this,_1));
     _tcpserver.setCloseCallback(bind(&SpellCorrectServer::onClose,this,_1));
     _tcpserver.start();
-    _timer.start();
+    _timer->start();
 }
 }//end of namespace wd

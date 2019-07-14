@@ -1,37 +1,23 @@
+ ///
+ /// @file    Timer.cc
+ /// @author  lemon(haohb13@gmail.com)
+ /// @date    2019-06-14 10:16:54
+ ///
+ 
 #include "Timer.h"
+
 #include <unistd.h>
 #include <poll.h>
 #include <sys/timerfd.h>
+
 #include <iostream>
 using namespace std;
+             
  
 namespace wd
 {
 
-Timer* Timer::createTimer()
-{
-    if(_pTimer == nullptr){
-        _pTimer = new Timer();
-        atexit(destroy);
-    }
-    return _pTimer;
-}
 
-void Timer::destroy()
-{
-    if(_pTimer)
-        delete _pTimer;
-}
-
-Timer* Timer::initTime(int initTime,int intervalTime,TimerCallback&& cb)
-{
-    _fd = createTimerfd();
-    _initalTime = initTime;
-    _intervalTime = intervalTime;
-    _cb = move(cb);
-    _isStarted = false;
-    return _pTimer;
-}
 void Timer::start()
 {
 	_isStarted = true;
@@ -79,11 +65,6 @@ int Timer::createTimerfd()
 	return fd;
 }
 
-int Timer::getFd()
-{
-    return _fd;
-}
-
 void Timer::setTimer(int initalTime, int intervalTime)
 {
 	struct itimerspec value;
@@ -106,5 +87,4 @@ void Timer::handleRead()
 		perror(">> read");
 	}
 }
-Timer* Timer::_pTimer = createTimer(); //饱汉模式
 }//end of namespace wd

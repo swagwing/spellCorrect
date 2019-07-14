@@ -38,7 +38,7 @@ void MyTask::execute()
 {
     cout << "enter MyTask::execute" << endl;
     cout << "MyTask::execute-->threadNum: " << threadNum << endl; //***threadNum获取正确
-    Cache iCache = _pCacheM->getCache(threadNum); //***第一次问题所在
+    Cache& iCache = _pCacheM->getCache(threadNum); //***第一次问题所在
     string response;
     if(iCache.search(_queryWord) != string()){
         response = iCache.search(_queryWord);

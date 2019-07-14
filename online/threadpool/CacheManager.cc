@@ -12,8 +12,15 @@ CacheManager* CacheManager::createInstance()
 {
     if(_pCacheManager == nullptr){
         _pCacheManager = new CacheManager();
+        atexit(destroy);
     }
     return _pCacheManager;
+}
+
+void CacheManager::destroy()
+{
+    if(_pCacheManager)
+        delete _pCacheManager;
 }
 
 CacheManager* CacheManager::initCache(size_t capacity)
@@ -29,11 +36,12 @@ CacheManager* CacheManager::initCache(size_t capacity)
 
 Cache& CacheManager::getCache(size_t num)
 {
-    return _cacheList[num];
+    return _cacheList[num-1];
 }
 
 void CacheManager::periodicUpdateCaches()
 {
+    cout << "####enter CacheManager::periodicUpdateCaches" << endl;
     list<pair<string,string>> iUpdateData;
     string str1,str2;
     size_t num = _cacheList.capacity();
@@ -50,7 +58,6 @@ void CacheManager::periodicUpdateCaches()
     MyConf conf("../conf/config"); //$$$硬编码，待修改
     CacheManager::writeToFile(conf.getConfigMap().find("cachePath")->second);
 }
-
 void CacheManager::readFromFile(const string& fileName)
 {
     cout << "enter CacheManager::readFromFile" << endl;

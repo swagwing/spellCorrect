@@ -2,7 +2,6 @@
 #define __WD_EVENTLOOP_H__
 
 #include "MutexLock.h"
-#include "Timer.h"
 #include <sys/epoll.h>
 #include <map>
 #include <memory>

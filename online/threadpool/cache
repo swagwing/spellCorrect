@@ -1,1 +1,3 @@
-**** *******
+word {"word_candidate":["word","wordy","ord"]}
+hi {"word_candidate":["hi","li","chi"]}
+hello {"word_candidate":["hello","hullo","hell"]}

@@ -14,6 +14,7 @@ class CacheManager
 {
 public:
     static CacheManager* createInstance();
+    static void destroy();
     CacheManager* initCache(size_t); //从磁盘文件中读取缓存信息
     void readFromFile(const string&);
     void writeToFile(const string&);
@@ -22,6 +23,7 @@ public:
     string searchMainCache(string& word);
 private:
     CacheManager();
+    ~CacheManager() {}
 private:
     static CacheManager* _pCacheManager;
     vector<Cache> _cacheList;

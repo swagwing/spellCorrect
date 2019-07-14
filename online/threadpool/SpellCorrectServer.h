@@ -5,7 +5,7 @@
 #include "MyConf.h"
 #include "MyDict.h"
 #include "MyTask.h"
-#include "Timer.h"
+#include "TimerThread.h"
 #include "CacheManager.h"
 #include <iostream>
 #include <functional>
@@ -27,7 +27,7 @@ private:
     TcpServer _tcpserver;
     Threadpool _threadpool;
     CacheManager* _pCacheM;
-    Timer* _timer;
+    TimerThread _timerThread;
 
 };
 

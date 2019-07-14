@@ -17,7 +17,7 @@ struct ThreadData
     void runInThread()
     {
         threadNum = Num_;
-        cout << "thread " << threadNum << ": Thread()" << endl;
+        cout << "I'm " << threadNum << " thread." << endl;
         if(cb_)
             cb_();
     }
@@ -28,7 +28,9 @@ Thread::Thread(ThreadCallback && cb,int num)
     , _cb(std::move(cb))
     , _isRunning(false)
       ,_threadNumber(num)
-{}
+{
+    cout << "thread " << _threadNumber << ": Thread()" << endl;
+}
 
 void Thread::start()
 {

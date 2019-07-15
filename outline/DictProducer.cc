@@ -1,7 +1,12 @@
 #include "DictProducer.h"
-
+#include "../include/cppjieba/include/cppjieba/Jieba.hpp"
 namespace wd
 {
+const char* const DICT_PATH = "../include/cppjieba/dict/jieba.dict.utf8";
+const char* const HMM_PATH = "../include/cppjieba/dict/hmm_model.utf8";
+const char* const USER_DICT_PATH = "../include/cppjieba/dict/user.dict.utf8";
+const char* const IDF_PATH = "../include/cppjieba/dict/idf.utf8";
+const char* const STOP_WORD_PATH = "../include/cppjieba/dict/stop_words.utf8";
 
 bool cmp(const pair<string,int> &lhs,const pair<string,int> &rhs)
 {
@@ -18,9 +23,46 @@ void mytolower(string& s)
     }
 }
 
-DictProducer::DictProducer(const string& filename)
-    :_dir(filename)
-{}
+bool is_chinese(const string& str)
+{
+    unsigned char utf[4] = {0};
+    unsigned char unicode[3] = {0};
+    bool res = false;
+    for (int i = 0; i < str.length(); i++) {
+        if ((str[i] & 0x80) == 0) {   //ascii begin with 0
+            res = false;
+        }
+        else /*if ((str[i] & 0x80) == 1) */{
+            utf[0] = str[i];
+            utf[1] = str[i + 1];
+            utf[2] = str[i + 2];
+            i++;
+            i++;
+            unicode[0] = ((utf[0] & 0x0F) << 4) | ((utf[1] & 0x3C) >>2);
+            unicode[1] = ((utf[1] & 0x03) << 6) | (utf[2] & 0x3F);
+            if(unicode[0] >= 0x4e && unicode[0] <= 0x9f){
+                if (unicode[0] == 0x9f && unicode[1] >0xa5)
+                    res = false;
+                else         
+                    res = true;
+            }else
+                res = false;
+        }
+    }
+    return res;
+}
+
+DictProducer::DictProducer(map<string,string> map)
+    :_configMap(map)
+{
+    _dir = _configMap.find("enPath")->second;
+    auto it = _configMap.begin();
+    while(it != _configMap.end()){
+        if(it->first.compare(0,6,"cnPath")==0)
+            _cnPath.push_back(it->second);
+        ++it;
+    }
+}
 
 //创建英文词典
 void DictProducer::build_dict()

@@ -6,7 +6,9 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include "Configuration.h"
 #define MAXSIZE 50
+
 using namespace std;
 
 namespace wd
@@ -15,15 +17,14 @@ namespace wd
 class DictProducer
 {
 public:
-    DictProducer(const string&);
-
-    //创建英文词典
-    void build_dict();
-
-    //将词典写入文件
-    void store_dict(const char*);
+    DictProducer(map<string,string>);
+    void build_dict(); //创建英文字典
+    void build_cn_dict();//创建中文字典
+    void store_dict(const char*); //将词典写入文件
 private:
-    string _dir; //语料库存放位置
+    map<string,string> _configMap;
+    string _dir; //英文语料库存放位置
+    vector<string> _cnPath; //中文语料库存储位置
     map<string,int> _dict; //存放词典
 };
 

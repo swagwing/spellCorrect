@@ -1,3 +1,5 @@
-word {"word_candidate":["word","wordy","ord"]}
+你好 {"word_candidate":["你说","你养","你们"]}
+
 hi {"word_candidate":["hi","li","chi"]}
 hello {"word_candidate":["hello","hullo","hell"]}
+word {"word_candidate":["word","wordy","ord"]}

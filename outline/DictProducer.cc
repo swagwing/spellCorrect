@@ -8,10 +8,12 @@ const char* const USER_DICT_PATH = "../include/cppjieba/dict/user.dict.utf8";
 const char* const IDF_PATH = "../include/cppjieba/dict/idf.utf8";
 const char* const STOP_WORD_PATH = "../include/cppjieba/dict/stop_words.utf8";
 
+#if 0
 bool cmp(const pair<string,int> &lhs,const pair<string,int> &rhs)
 {
     return lhs.second > rhs.second;
 }
+#endif
 
 void mytolower(string& s)
 {
@@ -93,15 +95,38 @@ void DictProducer::build_dict()
     }
 }
 
+//创建中文词典
+void DictProducer::build_cn_dict()
+{
+    cppjieba::Jieba jieba(DICT_PATH,
+        HMM_PATH,
+        USER_DICT_PATH,
+        IDF_PATH,
+        STOP_WORD_PATH);
+    vector<string> words;
+    string line;
+    for(auto& path:_cnPath)
+    {
+        cout << "path:" << path << endl;
+        ifstream ifs(path);
+        while(ifs>>line)
+        {
+            jieba.Cut(line,words,true);
+            for(auto& word:words){
+                if(is_chinese(word))
+                    ++_dict[word];
+            }
+        }
+    }
+}
+
 //存储词典文件
 void DictProducer::store_dict(const char* filepath)
 {
 
     ofstream ofs(filepath);
-    vector<pair<string,int>> dict_map(_dict.begin(),_dict.end());
-    sort(dict_map.begin(),dict_map.end(),cmp);
-    auto it = dict_map.begin();
-    while(it != dict_map.end())
+    auto it = _dict.begin();
+    while(it != _dict.end())
     {
         ofs << it->first << " " << it->second << endl;
         ++it;

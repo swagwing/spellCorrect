@@ -5,6 +5,36 @@
 namespace wd
 {
 
+size_t nBytesCode(const char ch)
+{
+    if(ch & (1 << 7))
+    {
+        int nBytes = 1;
+        for(int idx = 0;idx != 6; ++idx)
+        {
+            if(ch & (1 << (6-idx))){
+                ++nBytes;
+            }
+            else
+                break;
+        }
+        return nBytes;
+    }
+    return 1;
+}
+
+size_t length(const string& str)
+{
+    size_t ilen = 0;
+    for(size_t idx=0; idx!=str.size(); ++idx)
+    {
+        int nBytes = nBytesCode(str[idx]);
+        idx += (nBytes - 1);
+        ++ilen;
+    }
+    return ilen;
+}
+
 string wordFilter(string word)
 {
     char word_tmp[50];
@@ -77,17 +107,24 @@ void MyTask::execute()
 void MyTask::queryIndexTable()
 {
     string tmp;
-    tmp = wordFilter(_queryWord);
-    int len = tmp.length();
+    if(isalpha(_queryWord[0]))
+        tmp = wordFilter(_queryWord);
+    else
+        tmp = _queryWord;
     map<string,set<int>> index;
     set<int> iset;
     set<int> tset;
     index = _pInstance->getIndexTable();
-    for(int i = 0; i < len; ++i){
-        char alpha = tmp[i];
-        string str(1,alpha);
-        iset = index[str];
+    size_t cur = 0;
+    int nBytes;
+    string ch;
+    while(cur != tmp.size())
+    {
+        nBytes = nBytesCode(tmp[cur]);
+        ch = tmp.substr(cur,nBytes);
+        iset = index[ch];
         tset.insert(iset.begin(),iset.end());
+        cur += nBytes;
     }
     statistic(tset);
     //response();
@@ -116,8 +153,8 @@ int MyTask::distance(const string& rhs)
 {
     int dp[1005][1005];
     dp[0][0] = 0;
-    int len1 = _queryWord.length();
-    int len2 = rhs.length();
+    int len1 = length(_queryWord);
+    int len2 = length(rhs);
     for(int i = 1; i <= len1; ++i)
         for(int j = 1;j <= len2; ++j)
             dp[i][j] = INF;

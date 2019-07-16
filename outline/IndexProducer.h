@@ -15,7 +15,7 @@ namespace wd
 class IndexProducer
 {
 public:
-    explicit IndexProducer(vector<pair<string,int>> &);
+    explicit IndexProducer(const string&);
     
     //创建索引
     void build_index();
